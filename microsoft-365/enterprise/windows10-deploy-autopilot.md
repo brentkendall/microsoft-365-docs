@@ -17,7 +17,7 @@ ms.author: celested
 
 ![](./media/deploy-foundation-infrastructure/win10enterprise_icon-small.png)
 
-If you have new Windows 10 PCs, you can use Windows Autopilot to customize the out-of-box-experience (OOBE) for your organization and deploy a new system with apps and settings already configured. There are no images to deploy, no drivers to inject, and no infrastructure to manage. Users can go through the deployment process independently, without the need consult their IT administrator.
+If you have new Windows 10 PCs, you can use Windows Autopilot to customize the out-of-box-experience (OOBE) for your organization and deploy a new system with apps and settings already configured. There are no images to deploy, no drivers to inject, and no infrastructure to manage. Users can go through the deployment process independently, without the need to consult their IT administrator.
 
 You can set up and pre-configure new Windows 10 devices and get them ready for productive use using Windows Autopilot. To learn more about Windows Autopilot, including benefits and Windows Autopilot scenarios, see [Overview of Windows Autopilot](https://docs.microsoft.com/windows/deployment/windows-Autopilot/windows-10-Autopilot). When ready, follow these parts to start setting up new devices.
 
@@ -47,31 +47,32 @@ See [Configure Windows diagnostic data in your organization](https://docs.micros
 ## Part 2: Start Windows Autopilot deployment
 See [Overview of Windows Autopilot](https://docs.microsoft.com/windows/deployment/windows-Autopilot/windows-10-Autopilot) to:
 
-1. Learn about and complete the prerequisites for Windows Autopilot deployment. The prerequisites include:
-    - **Device registration and OOBE customization**
-
-        To register devices, you need to acquire their hardware ID and register it. We are actively working with various hardware vendors to enable them to provide the required information to you, or upload it on your behalf. You also have the option to capture this information by yourself using a PowerShell script that generates a .csv file with the device's hardware ID.
-
-        Once devices are registered, there are OOBE customization options that you can configure including skipping privacy settings and EULA.
-
-    - **Company branding for OOBE**
-
-        This allows you to add branding to appear during device OOBE.
-
-    - **MDM auto-enrollment in Microsoft Intune**
-        
-        Automatic enrollment lets users enroll their Windows 10 devices in Intune for device management when they connect their devices to Azure AD. To enroll, users add their work account to their personally-owned devices or join corporate-owned devices to Azure AD. In the background, the device is also enrolled for management with Intune.
-
-    - **Network connectivity to cloud services used by Windows Autopilot**
-
-        The Windows Autopilot Deployment Program uses a number of cloud services to get your devices to a productive state and these services must be accessible from devices registered as Windows Autopilot devices. 
-
-    - **Devices must be pre-installed with Windows 10, version 1703 or later**
-
-2. Learn about and select the Windows Autopilot Deployment Program for your organization. You can select from these deployment programs:
+1. Learn about and select the Windows Autopilot Deployment Program for your organization. You can select from these deployment programs:
     - **Microsoft Store for Business**
     - **Microsoft Intune**
     - **Partner Center**
+    
+2. Learn how to deploy Windows Autopilot devices, which involves:
+    - **Device registration**
+
+        To register devices, you need to acquire each devices' unique hardware ID and register them. This unique ID is either the 4K Hardware Hash (for devices older than January 2018), or the Tuple (Manufacturer name + Model name + Serial #). In some cases, the Tuple can be requested from the OEM or partner from whom the device was purchased. Alternatively, the 4K Hardware Hash can be acquired by running [this PowerShell script](https://www.powershellgallery.com/packages/Get-WindowsAutoPilotInfo/1.3/DisplayScript) on any unboxed device. The Powershell script generates a .csv file with the device's unique ID, which can be uploaded either via Microsoft Partner Center (for CSP partners) or Microsoft Store for Business or InTune (for non-CSP partners).
+
+    - **Creating profiles**
+        Once devices are registered (or added), you can create and assign profiles to those devices, which include such options as:
+        - skip privacy settings
+        - disable local admin account
+        - skip EULA
+        
+        Depending on the portal you're using (Microsoft Partner Center, Microsoft Store for Business, or InTune), you may be able to do additional customizations, such as:
+        - adding company branding
+        - adding applications
+
+    - **Out-of-box experience (OOBE)**
+        After devices have been registered and assigned a profile, they can be turned on. During OOBE, after connecting to the internet, the device will be recognized as an Autopilot device and then automatically enrolled into InTune (or another MDM) based on the Azure Active Directory TenantID associated with that device.
+        
+        NOTE:  AAD Premium or Office 365 Pro Plus are required for auto-enrollment.
+    
+        Once enrolled in InTune, any profile previously created and assigned to that device will be pushed down, allowing the rest of the OOBE experience to continue without further interaction from the end-user, until the device arrives at the desktop, with all configurations (and apps) already completed or installed. The device is immediately in a ready-to-work state.
 
 ## Part 3: Set up a Windows 10 device for Microsoft 365
 Before you can set up Windows devices for Microsoft 365 users, make sure all the Windows devices are running Windows 10, version 1703 (Creators Update) or later.
